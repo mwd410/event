@@ -7,6 +7,7 @@ module.exports = function( grunt ) {
      */
     grunt.loadNpmTasks( 'grunt-contrib-watch' );
     grunt.loadNpmTasks( 'grunt-contrib-jshint' );
+    grunt.loadNpmTasks( 'grunt-jasmine-node' );
 
     var buildConfig = require( 'build.config' );
 
@@ -67,7 +68,14 @@ module.exports = function( grunt ) {
             jssource  : {
                 files : [ '<%= appFiles.js %>' ],
                 tasks : [ 'jshint:src' ]
+            },
+            jsunit : {
+                files : [ '<%= appFiles.jsunit %>' ],
+                tasks : [ 'test' ]
             }
+        },
+        test : {
+            files : [ '<%= appFiles.jsunit %>' ]
         }
     } );
 
@@ -75,9 +83,9 @@ module.exports = function( grunt ) {
 
     // This not only shuts up jshint about not adhering to camelCase,
     // But also allows us to change our testing framework more easily
-    //grunt.renameTask('jasmine_node', 'test');
+    grunt.renameTask('jasmine_node', 'test');
 
     // When we start watching, it should do everything and then watch
     grunt.renameTask( 'watch', 'delta' );
-    grunt.registerTask( 'watch', ['jshint', 'delta'] );
+    grunt.registerTask( 'watch', ['jshint', 'test', 'delta'] );
 };

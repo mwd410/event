@@ -8,7 +8,7 @@ function buildConfig(obj, config) {
 
         if (_.isPlainObject(value)) {
             //allow recursive over riding
-            obj[key] = {};
+            obj[key] = obj[key] || {};
             buildConfig(obj[key], value);
         } else {
 
@@ -35,3 +35,5 @@ module.exports = function(env) {
 
     return result;
 };
+
+module.exports.buildConfig = buildConfig;
