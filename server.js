@@ -1,6 +1,5 @@
 'use strict';
 
-console.log(process.env);
 process.env.NODE_PATH += ':app:.';
 
 var express = require('express'),
@@ -17,3 +16,5 @@ require('lib')(app);
 
 // Listen to our configured port
 app.listen(app.get('config').port);
+
+console.log('Application started on port ' + config.port);
