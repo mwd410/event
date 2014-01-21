@@ -17,4 +17,4 @@ require('lib')(app);
 // Listen to our configured port
 app.listen(app.get('config').port);
 
-console.log('Application started on port ' + config.port);
+console.log('Application started on port ' + app.get('config').port);
