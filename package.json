@@ -12,6 +12,7 @@
     "request": "~2.31.0",
     "express": "~3.4.7",
     "lodash": "~2.4.1"
+    "bluebird": "~1.0.1"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
