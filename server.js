@@ -6,7 +6,9 @@ var express = require('express'),
     app = module.exports = express();
 
 // Define configuration.
-app.set('config', require('./config')(app.get('env')));
+var config = require('./config')(app.get('env'));
+
+app.set('config', config);
 
 // Define middleware
 require('middleware')(app);
@@ -15,6 +17,7 @@ require('middleware')(app);
 require('lib')(app);
 
 // Listen to our configured port
-app.listen(app.get('config').port);
+app.listen(app.get('config').app.port);
 
-console.log('Application started on port ' + app.get('config').port);
+console.log('Application started on port ' + app.get('config').app.port);
+

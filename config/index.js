@@ -1,6 +1,8 @@
 'use strict';
 
-var _ = require('lodash');
+var _ = require('lodash'),
+    walkSync = require('utils').walkSync,
+    path = require('path');
 
 function buildConfig(obj, config) {
 
@@ -19,21 +21,27 @@ function buildConfig(obj, config) {
 
 module.exports = function(env) {
 
-    var result = {},
-        config = require('./config'),
-        all = config.all,
-        prod = config.prod,
-        dev = config.dev;
+    var config = {},
+        fileNameRegex = /^(\w+)\.js$/;
 
-    buildConfig(result, all);
+    var walkResult = walkSync(__dirname, function(err, filePath, stat) {
 
-    if ('production' === env) {
-        buildConfig(result, prod);
-    } else {
-        buildConfig(result, dev);
-    }
+        if (stat.isDirectory() && env !== path.basename(filePath) ||
+            !stat.isDirectory() && filePath === __filename ||
+            !fileNameRegex.test(path.basename(filePath))) {
 
-    return result;
+            return false;
+        }
+    });
+
+    _.forEach(walkResult, function(fn, file) {
+        if (typeof fn !== 'function') {
+            return;
+        }
+        config[file.match(fileNameRegex)[1]] = fn(true);
+    });
+
+    return config;
 };
 
 module.exports.buildConfig = buildConfig;
