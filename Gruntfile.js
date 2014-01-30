@@ -1,23 +1,24 @@
 'use strict';
 
-module.exports = function( grunt ) {
+module.exports = function(grunt) {
 
     /**
      * Load required grunt modules.
      */
-    grunt.loadNpmTasks( 'grunt-contrib-watch' );
-    grunt.loadNpmTasks( 'grunt-contrib-jshint' );
-    grunt.loadNpmTasks( 'grunt-jasmine-node' );
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-jasmine-node');
+    grunt.loadNpmTasks('grunt-jscs-checker');
 
-    var buildConfig = require( 'build.config' );
+    var buildConfig = require('build.config');
 
-    var taskConfig = grunt.util._.extend( buildConfig, {
+    var taskConfig = grunt.util._.extend(buildConfig, {
 
         /**
          * We read in our `package.json` file so we can access the package name and
          * version. It's already there, so we don't repeat ourselves here.
          */
-        pkg : grunt.file.readJSON( 'package.json' ),
+        pkg : grunt.file.readJSON('package.json'),
 
         /**
          * jshint provides automated style checking of all code.
@@ -60,7 +61,7 @@ module.exports = function( grunt ) {
          * delta (originally watch) is a task which watches for file changes
          * and performs grunt tasks whenever they occur.
          */
-        delta  : {
+        delta : {
             gruntfile : {
                 files : [ 'Gruntfile.js' ],
                 tasks : [ 'jshint:gruntfile' ]
@@ -69,23 +70,34 @@ module.exports = function( grunt ) {
                 files : [ '<%= appFiles.js %>' ],
                 tasks : [ 'jshint:src' ]
             },
-            jsunit : {
+            jsunit    : {
                 files : [ '<%= appFiles.jsunit %>' ],
                 tasks : [ 'test' ]
             }
         },
-        test : {
+        test  : {
             files : [ '<%= appFiles.jsunit %>' ]
+        },
+        jscs : {
+            gruntfile : {
+                src : [ 'Gruntfile.js' ]
+            },
+            jssource  : {
+                src : [ '<%= appFiles.js %>' ]
+            },
+            jsunit    : {
+                src : [ '<%= appFiles.jsunit %>' ]
+            }
         }
-    } );
+    });
 
-    grunt.initConfig( taskConfig );
+    grunt.initConfig(taskConfig);
 
     // This not only shuts up jshint about not adhering to camelCase,
     // But also allows us to change our testing framework more easily
     grunt.renameTask('jasmine_node', 'test');
 
     // When we start watching, it should do everything and then watch
-    grunt.renameTask( 'watch', 'delta' );
-    grunt.registerTask( 'watch', ['jshint', 'test', 'delta'] );
+    grunt.renameTask('watch', 'delta');
+    grunt.registerTask('watch', ['jshint', 'jscs', 'test', 'delta']);
 };
