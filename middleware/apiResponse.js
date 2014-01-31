@@ -12,7 +12,7 @@ module.exports = function(req, res, next) {
     };
 
     api.error = function(error) {
-        res.send({
+        res.send(400, {
             success : false,
             error   : error
         });
