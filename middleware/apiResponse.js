@@ -14,12 +14,15 @@ module.exports = function(req, res, next) {
     };
 
     api.error = function(error) {
+        if (error.statusCode) {
+            api.statusCode = error.statusCode;
+        }
         if (api.statusCode === 200) {
             api.statusCode = 500;
         }
         res.send(api.statusCode, {
             success : false,
-            error   : error
+            error   : error.message || error
         });
     };
 
